@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { EdgeConfigValue, get } from "@vercel/edge-config";
+import {  get } from "@vercel/edge-config";
 
 async function middleware() {
   const greeting = await get("greeting");
