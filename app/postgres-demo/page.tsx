@@ -25,7 +25,9 @@ async function About( props:any ) {
 }
 
 const getHello = async () => {
-    const res = await fetch(`/api/list`)
+    const res = await fetch(`/api/list`,{
+      method:'GET'
+    })
     return res.json()
 }
 
