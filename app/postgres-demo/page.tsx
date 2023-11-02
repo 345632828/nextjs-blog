@@ -18,7 +18,7 @@ async function About( props:any ) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex border border-indigo-600 h-8 hover:h-full">
-        About {posts?.message} {gree}
+        About is {posts?.message} {gree}
       </div>
     </main>
   );
