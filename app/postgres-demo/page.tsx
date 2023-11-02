@@ -1,35 +1,33 @@
-import { get } from "@vercel/edge-config";
-import { NextResponse } from "next/server";
-import {useState} from "react";
-async function middleware() {
-  const greeting = await get("name");
-  return greeting
-  //return NextResponse.json({ message: greeting, status: 200 });
-}
+"use client";
 
-async function About( props:any ) {
-  // const [dt,setDt] = useState(0)
+import { NextResponse } from "next/server";
+import { useState,useEffect } from "react";
+const  About =  ()=> {
+  const [dt,setDt] = useState('')
+  useEffect(() => {    
+      fetch(`/api/list`, { method: "GET" }).then(async (res) => {
+        const data = (await res.json()) 
+        setDt(data.message)
+     
+      });
+  }, []);
   
-  const posts =await getHello()
-  const gree = await middleware()
-  console.log('posts')
-  console.log(posts)
-  console.log(gree)
+  
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex border border-indigo-600 h-8 hover:h-full">
-        About is {posts?.message} {gree}
+        About is {dt} 
       </div>
     </main>
   );
 }
 
 const getHello = async () => {
-    const res = await fetch(`/api/list`,{
-      method:'GET'
-    })
-    return res.json()
-}
+  const res = await fetch(`/api/list`, {
+    method: "GET",
+  });
+  return res.json();
+};
 
 // export async function getPosts() {
 //   const res = await fetch(`/api/list`)
