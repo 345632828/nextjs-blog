@@ -7,13 +7,13 @@ export default async function Cart({
   params: { id: string };
 }): Promise<JSX.Element> {
   console.log(params);
-  let { rows } = await sql`SELECT * FROM TodoList2 WHERE id = ${params.id}`;
+  let { rows } = await sql`SELECT * FROM TodoList WHERE id = ${params.id}`;
   if (Number(params.id) > 2) {
     let sq = {
       userId: "userId" + Math.floor(Math.random() * 101),
       content: Math.floor(Math.random() * 101),
     };
-    sql`INSERT INTO TodoList2 (content, userId) VALUES (${sq.userId}, ${sq.content})`;
+    sql`INSERT INTO TodoList (content, userId) VALUES (${sq.userId}, ${sq.content})`;
    
   }
   // console.log('rows')

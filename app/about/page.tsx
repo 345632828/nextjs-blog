@@ -8,7 +8,7 @@ export default async function Cart({
   params: { user: string }
 }): Promise<JSX.Element> {
   console.log(params)
-  const { rows } = await sql`SELECT * FROM TodoList2`;
+  const { rows } = await sql`SELECT * FROM TodoList`;
   console.log('rows')
   console.log(rows)
   // let sq = {

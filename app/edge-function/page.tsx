@@ -1,27 +1,30 @@
-// import { NextResponse } from "next/server";
-// import { EdgeConfigValue, get } from "@vercel/edge-config";
+import { NextResponse } from "next/server";
+import { EdgeConfigValue, get } from "@vercel/edge-config";
 
-// async function middleware() {
-//   const greeting = await get("greeting");
-//   return greeting;  
-//   return NextResponse.json(
-//     { message: "Hello from middleware!" },
-//     { status: 200 }
-//   );
-// }
+async function middleware() {
+  const greeting = await get("greeting");
+  const greeting2 = await get("name");
+  return [greeting,greeting2];  
+  // return NextResponse.json(
+  //   { message: "Hello from middleware!" },
+  //   { status: 200 }
+  // );
+}
 
 async function About() {
-  // let a: EdgeConfigValue | undefined;
-  // a = await middleware();
-  // console.log("-------------------");
-  // console.log(new Date());
-  // console.log(a);
+  let list:any;
+  list = await middleware();
+  console.log("-------------------");
+  console.log(new Date());
+  console.log(list);
   
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex border border-indigo-600 h-8 hover:h-full">
-        About 1111111111111111111
-      </div>
+     
+     {list.map((item:string)=>{
+      return <div key={item} >{item}</div>
+     })}
+  
     </main>
   );
 }
