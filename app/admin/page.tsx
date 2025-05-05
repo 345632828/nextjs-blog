@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Input, Select, DatePicker, Button, Form, Card, message } from 'antd';
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -15,20 +15,28 @@ const ItemType = 'FORM_COMPONENT';
 
 // 左侧：组件项
 const ComponentItem = ({ type, label, onBeforeDrag }: any) => {
+  const ref = useRef<HTMLButtonElement>(null);
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemType,
-    item: { type }, // 这里是设置拖动的项
+    item: { type },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   }));
 
+  useEffect(() => {
+    if (ref.current) {
+      drag(ref.current);
+    }
+  }, [ref, drag]);
+
   return (
     <Button
-      ref={drag}
+      ref={ref}
       block
       style={{ marginBottom: 10, opacity: isDragging ? 0.5 : 1 }}
-      onMouseDown={() => onBeforeDrag?.()} // 确保拖动开始前进行重置
+      onMouseDown={() => onBeforeDrag?.()}
     >
       {label}
     </Button>
@@ -37,6 +45,8 @@ const ComponentItem = ({ type, label, onBeforeDrag }: any) => {
 
 // 中间：单个表单组件
 const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [, drop] = useDrop({
     accept: ItemType,
     hover: (item: any) => {
@@ -49,11 +59,17 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemType,
-    item: { type: comp.type, index: idx }, // 绑定组件的索引
+    item: { type: comp.type, index: idx },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   }));
+
+  useEffect(() => {
+    if (ref.current) {
+      drag(drop(ref.current));
+    }
+  }, [ref, drag, drop]);
 
   const renderComponent = (comp: any) => {
     switch (comp.type) {
@@ -75,7 +91,7 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
 
   return (
     <div
-      ref={(node) => drag(drop(node))}
+      ref={ref}
       style={{ opacity: isDragging ? 0.5 : 1 }}
       onDoubleClick={() => onDoubleClick(idx)}
     >
@@ -94,7 +110,6 @@ const DropZone = ({ children, onAdd }: any) => {
           onAdd(item.type);
         }
       }
-      // 重置拖拽项状态，保证每次可以继续拖动
       item.index = undefined;
     },
     collect: (monitor) => ({
@@ -122,9 +137,8 @@ const DropZone = ({ children, onAdd }: any) => {
 export default function Index() {
   const [formComponents, setFormComponents] = useState<any[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [dragKey, setDragKey] = useState(0); // 👈 用于强制更新组件区状态
+  const [dragKey, setDragKey] = useState(0);
 
-  // 添加新组件
   const addComponent = (type: string) => {
     const newComponent = {
       type,
@@ -134,7 +148,6 @@ export default function Index() {
     setFormComponents([...formComponents, newComponent]);
   };
 
-  // 移动组件
   const moveComponent = (fromIndex: number, toIndex: number) => {
     const updated = [...formComponents];
     const [moved] = updated.splice(fromIndex, 1);
@@ -142,7 +155,6 @@ export default function Index() {
     setFormComponents(updated);
   };
 
-  // 更新选中的组件属性
   const updateSelected = (field: string, value: string) => {
     if (selectedIndex === null) return;
     const updated = [...formComponents];
@@ -150,13 +162,11 @@ export default function Index() {
     setFormComponents(updated);
   };
 
-  // 保存表单数据
   const saveForm = () => {
     message.success('表单已保存');
     console.log('保存表单数据：', JSON.stringify(formComponents, null, 2));
   };
 
-  // 导出表单数据为 JSON
   const exportForm = () => {
     const json = JSON.stringify(formComponents, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -173,13 +183,10 @@ export default function Index() {
         <Card title="组件区" style={{ width: 200 }}>
           {componentsList.map((item, index) => (
             <ComponentItem
-              key={`${item.type}-${dragKey}-${index}`} // 👈 确保唯一 key 强制更新
+              key={`${item.type}-${dragKey}-${index}`}
               type={item.type}
               label={item.label}
-              onBeforeDrag={() => {
-                // 重置 dragKey，强制刷新组件，重置拖拽状态
-                setDragKey((prev) => prev + 1);
-              }}
+              onBeforeDrag={() => setDragKey((prev) => prev + 1)}
             />
           ))}
         </Card>
