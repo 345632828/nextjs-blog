@@ -102,6 +102,8 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
 
 // 中间：可视区容器，支持拖入新组件
 const DropZone = ({ children, onAdd }: any) => {
+  const dropRef = useRef<HTMLDivElement>(null);
+
   const [{ isOver }, drop] = useDrop({
     accept: ItemType,
     drop: (item: any, monitor) => {
@@ -117,9 +119,15 @@ const DropZone = ({ children, onAdd }: any) => {
     }),
   });
 
+  useEffect(() => {
+    if (dropRef.current) {
+      drop(dropRef.current);
+    }
+  }, [drop, dropRef]);
+
   return (
     <div
-      ref={drop}
+      ref={dropRef}
       style={{
         minHeight: 200,
         padding: 10,
