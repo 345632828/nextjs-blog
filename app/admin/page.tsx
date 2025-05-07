@@ -7,22 +7,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import renderComponents from "@/components/josnToForm";
 import componentsList from './formComponents';
 
-// const componentsList = [
-//   { type: "input", label: "输入框" },
-//   { type: "select", label: "下拉框" },
-//   { type: "date", label: "日期选择" },
-//   {
-//     type: "radio",
-//     label: "单选框",
-//     list: [
-//       { label: "苹果", value: "A" },
-//       { label: "西瓜", value: "B" },
-//     ],
-//   },
-// ];
-
 const ItemType = 'FORM_COMPONENT';
-
 // 定义表单项的类型
 interface FormItem {
   type: string;
@@ -44,6 +29,36 @@ function convertDateToPickerView(data: FormItem[]): FormItem[] {
     }
     return { ...item }; 
   });
+}
+
+type Option = {
+  label: string;
+  value: string;
+  children?: Option[];
+};
+
+type ComponentItem = {
+  type: string;
+  label: string;
+  list?: Option[];
+  value?: any;
+};
+
+function updateListItemInPlace(
+  components: ComponentItem[],
+  targetType: string,
+  targetValue: string,
+  newItem: Partial<Option>
+): void {
+  for (const item of components) {
+    if (item.type === targetType && Array.isArray(item.list)) {
+      for (const subItem of item.list) {
+        if (subItem.value === targetValue) {
+          Object.assign(subItem, newItem);
+        }
+      }
+    }
+  }
 }
 
 
@@ -104,44 +119,17 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
       drag(drop(ref.current));
     }
   }, [ref, drag, drop]);
-
-  // const renderComponent = (comp: any) => {
-  //   // console.log('comp',comp)
-  //   switch (comp.type) {
-  //     case 'input':
-  //       return <Input placeholder={comp.placeholder} />;
-  //     case 'select':
-  //       return (
-  //         <Select placeholder={comp.placeholder}>
-  //           <Select.Option value="1">选项1</Select.Option>
-  //           <Select.Option value="2">选项2</Select.Option>
-  //         </Select>
-  //       );
-  //     case 'date':
-  //       return <DatePicker />;
-  //       case 'radio':
-  //         return (
-  //           <Radio.Group>
-  //             {(comp.list || [
-  //               { label: '选项A', value: 'A' },
-  //               { label: '选项B', value: 'B' },
-  //             ]).map((opt: any) => (
-  //               <Radio key={opt.value} value={opt.value}>
-  //                 {opt.label}
-  //               </Radio>
-  //             ))}
-  //           </Radio.Group>
-  //         );
-  //     default:
-  //       return null;
-  //   }
-  // };
-
+  const onDoubleClickEdit = ()=>{
+    console.log('componentsList',componentsList)
+    console.log('idx',idx)
+    updateListItemInPlace(componentsList, "radio", "A", { label: "香蕉" });
+    onDoubleClick(idx)
+  }
   return (
     <div
       ref={ref}
       style={{ opacity: isDragging ? 0.5 : 1 }}
-      onDoubleClick={() => onDoubleClick(idx)}
+      onDoubleClick={onDoubleClickEdit}
     >
       <Form.Item label={comp.label}>{renderComponents(comp)}</Form.Item>
     </div>
@@ -206,6 +194,7 @@ export default function Index() {
       label: '未命名',
       placeholder: '',
       list: config?.list || [],
+      value:config?.value || 0,
     };
     setFormComponents([...formComponents, newComponent]);
   };
@@ -231,7 +220,6 @@ export default function Index() {
   };
 
   const exportForm = () => {
-    // console.log(formComponentsJosn)
     const json = JSON.stringify(convertDateToPickerView(formComponents), null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const link = document.createElement('a');

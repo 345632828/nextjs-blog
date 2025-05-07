@@ -21,7 +21,7 @@ export default [
   },
   {
     type: "cascader",
-    label: "联动选择框",
+    label: "极联选择",
     list: [
       {
         value: "zhejiang",
@@ -57,6 +57,8 @@ export default [
       },
     ],
   },
+  { type: "rate", label: "评分" ,value:2.5 },
+
   //   { type: "password", label: "密码框" },
   //   { type: "textarea", label: "多行文本框" },
   //   { type: "number", label: "数字输入框" },
@@ -64,10 +66,8 @@ export default [
   //   { type: "date", label: "日期选择" },
   //   { type: "rangePicker", label: "日期范围" },
   //   { type: "time", label: "时间选择" },
-  //   { type: "switch", label: "开关" },
-
-  //   { type: "slider", label: "滑块" },
-  //   { type: "rate", label: "评分" },
+  //   { type: "switch", label: "开关" }
+  //   { type: "slider", label: "滑块" },    
   //   { type: "upload", label: "上传文件" },
   //   { type: "treeSelect", label: "树选择" },
   //   { type: "colorPicker", label: "颜色选择器" },

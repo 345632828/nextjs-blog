@@ -9,6 +9,7 @@ import {
   Radio,
   Checkbox,
   Cascader,
+  Rate,
 } from "antd";
 const renderComponent = (comp: any) => {
   // console.log('comp',comp)
@@ -66,8 +67,8 @@ const renderComponent = (comp: any) => {
         console.log(value);
       };
       return (<Checkbox.Group options={optionsChecked} defaultValue={[]} onChange={onChangeChecked} />);
-    // case "checked":
-    //   return <DatePicker />;
+    case "rate":
+      return <Rate allowHalf defaultValue={comp.value||5} />;
     // case "checked":
     //   return <DatePicker />;
     default:
