@@ -7,6 +7,7 @@ import {
   Card,
   message,
   Radio,
+  Checkbox,
   Cascader,
 } from "antd";
 const renderComponent = (comp: any) => {
@@ -54,11 +55,21 @@ const renderComponent = (comp: any) => {
         />
       );
     case "checked":
-      return <DatePicker />;
-    case "checked":
-      return <DatePicker />;
-    case "checked":
-      return <DatePicker />;
+      let optionsChecked = [
+        { label: 'Apple', value: 'Apple' },
+        { label: 'Pear', value: 'Pear' },
+      ];
+      if(comp.list){
+        optionsChecked=comp.list
+      }
+      const onChangeChecked = (value:any) => {
+        console.log(value);
+      };
+      return (<Checkbox.Group options={optionsChecked} defaultValue={[]} onChange={onChangeChecked} />);
+    // case "checked":
+    //   return <DatePicker />;
+    // case "checked":
+    //   return <DatePicker />;
     default:
       return null;
   }
