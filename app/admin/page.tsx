@@ -13,6 +13,28 @@ const componentsList = [
 
 const ItemType = 'FORM_COMPONENT';
 
+// 定义表单项的类型
+interface FormItem {
+  type: string;
+  label: string;
+  placeholder: string;
+  [key: string]: any; // 支持额外字段
+}
+
+// 转换函数
+function convertDateToPickerView(data: FormItem[]): FormItem[] {
+  return data.map((item: FormItem): FormItem => {
+    if (item.type === 'date') {
+      return {
+        ...item,
+        type: 'picker-view',
+      };
+    }
+    return { ...item }; // 保证返回新对象，避免引用旧对象
+  });
+}
+
+
 // 左侧：组件项
 const ComponentItem = ({ type, label, onBeforeDrag }: any) => {
   const ref = useRef<HTMLButtonElement>(null);
@@ -148,7 +170,9 @@ export default function Index() {
   const [dragKey, setDragKey] = useState(0);
 
   const addComponent = (type: string) => {
+    const uniqueId = `comp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     const newComponent = {
+      uniqueId,
       type,
       label: '未命名',
       placeholder: '',
@@ -163,6 +187,7 @@ export default function Index() {
     setFormComponents(updated);
   };
 
+  // 更新可视区表单
   const updateSelected = (field: string, value: string) => {
     if (selectedIndex === null) return;
     const updated = [...formComponents];
@@ -176,7 +201,9 @@ export default function Index() {
   };
 
   const exportForm = () => {
-    const json = JSON.stringify(formComponents, null, 2);
+    const formComponentsJosn:FormItem[] = convertDateToPickerView(formComponents)
+    console.log(formComponentsJosn)
+    const json = JSON.stringify(formComponentsJosn, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
