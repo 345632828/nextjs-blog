@@ -1,15 +1,25 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { Input, Select, DatePicker, Button, Form, Card, message } from 'antd';
+import { Input, Select, DatePicker, Button, Form, Card, message, Radio,  } from 'antd';
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import renderComponents from "@/components/josntoForm";
+import componentsList from './formComponents';
 
-const componentsList = [
-  { type: 'input', label: '输入框' },
-  { type: 'select', label: '下拉框' },
-  { type: 'date', label: '日期选择' },
-];
+// const componentsList = [
+//   { type: "input", label: "输入框" },
+//   { type: "select", label: "下拉框" },
+//   { type: "date", label: "日期选择" },
+//   {
+//     type: "radio",
+//     label: "单选框",
+//     list: [
+//       { label: "苹果", value: "A" },
+//       { label: "西瓜", value: "B" },
+//     ],
+//   },
+// ];
 
 const ItemType = 'FORM_COMPONENT';
 
@@ -17,8 +27,10 @@ const ItemType = 'FORM_COMPONENT';
 interface FormItem {
   type: string;
   label: string;
+  options?: { label: string; value: string }[];
+  list?: { label: string; value: string }[];
   placeholder: string;
-  [key: string]: any; // 支持额外字段
+  [key: string]: any; 
 }
 
 // 转换函数
@@ -93,23 +105,37 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
     }
   }, [ref, drag, drop]);
 
-  const renderComponent = (comp: any) => {
-    switch (comp.type) {
-      case 'input':
-        return <Input placeholder={comp.placeholder} />;
-      case 'select':
-        return (
-          <Select placeholder={comp.placeholder}>
-            <Select.Option value="1">选项1</Select.Option>
-            <Select.Option value="2">选项2</Select.Option>
-          </Select>
-        );
-      case 'date':
-        return <DatePicker />;
-      default:
-        return null;
-    }
-  };
+  // const renderComponent = (comp: any) => {
+  //   // console.log('comp',comp)
+  //   switch (comp.type) {
+  //     case 'input':
+  //       return <Input placeholder={comp.placeholder} />;
+  //     case 'select':
+  //       return (
+  //         <Select placeholder={comp.placeholder}>
+  //           <Select.Option value="1">选项1</Select.Option>
+  //           <Select.Option value="2">选项2</Select.Option>
+  //         </Select>
+  //       );
+  //     case 'date':
+  //       return <DatePicker />;
+  //       case 'radio':
+  //         return (
+  //           <Radio.Group>
+  //             {(comp.list || [
+  //               { label: '选项A', value: 'A' },
+  //               { label: '选项B', value: 'B' },
+  //             ]).map((opt: any) => (
+  //               <Radio key={opt.value} value={opt.value}>
+  //                 {opt.label}
+  //               </Radio>
+  //             ))}
+  //           </Radio.Group>
+  //         );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <div
@@ -117,7 +143,7 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
       style={{ opacity: isDragging ? 0.5 : 1 }}
       onDoubleClick={() => onDoubleClick(idx)}
     >
-      <Form.Item label={comp.label}>{renderComponent(comp)}</Form.Item>
+      <Form.Item label={comp.label}>{renderComponents(comp)}</Form.Item>
     </div>
   );
 };
@@ -170,12 +196,16 @@ export default function Index() {
   const [dragKey, setDragKey] = useState(0);
 
   const addComponent = (type: string) => {
+    console.log('type',type)
+    console.log('formComponents',formComponents)
     const uniqueId = `comp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const config = componentsList.find((c) => c.type === type);
     const newComponent = {
       uniqueId,
       type,
       label: '未命名',
       placeholder: '',
+      list: config?.list || [],
     };
     setFormComponents([...formComponents, newComponent]);
   };
