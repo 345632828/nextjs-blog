@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Input, Select, DatePicker, Button, Form, Card, message, Radio,  } from 'antd';
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import renderComponents from "@/components/josntoForm";
+import renderComponents from "@/components/josnToForm";
 import componentsList from './formComponents';
 
 // const componentsList = [
@@ -42,7 +42,7 @@ function convertDateToPickerView(data: FormItem[]): FormItem[] {
         type: 'picker-view',
       };
     }
-    return { ...item }; // 保证返回新对象，避免引用旧对象
+    return { ...item }; 
   });
 }
 
@@ -231,9 +231,8 @@ export default function Index() {
   };
 
   const exportForm = () => {
-    const formComponentsJosn:FormItem[] = convertDateToPickerView(formComponents)
-    console.log(formComponentsJosn)
-    const json = JSON.stringify(formComponentsJosn, null, 2);
+    // console.log(formComponentsJosn)
+    const json = JSON.stringify(convertDateToPickerView(formComponents), null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);

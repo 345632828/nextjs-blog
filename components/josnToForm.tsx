@@ -38,9 +38,27 @@ const renderComponent = (comp: any) => {
           ))}
         </Radio.Group>
       );
+    case "cascader":
+      let options = [];
+      if(comp.list){
+        options=comp.list
+      }
+      const onChange = (value:any) => {
+        console.log(value);
+      };
+      return (
+        <Cascader
+          options={options}
+          onChange={onChange}
+          placeholder="Please select"
+        />
+      );
     case "checked":
-        return <DatePicker />;
-    
+      return <DatePicker />;
+    case "checked":
+      return <DatePicker />;
+    case "checked":
+      return <DatePicker />;
     default:
       return null;
   }

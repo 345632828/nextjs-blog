@@ -11,7 +11,7 @@ export default [
     ],
   },
   {
-    type: "Cascader",
+    type: "cascader",
     label: "联动选择框",
     list: [
         {
