@@ -6,6 +6,7 @@ import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import renderComponents from "@/components/josnToForm";
 import componentsList from './formComponents';
+import FormComponent from './formEdit'
 
 const ItemType = 'FORM_COMPONENT';
 // 定义表单项的类型
@@ -93,7 +94,7 @@ const ComponentItem = ({ type, label, onBeforeDrag }: any) => {
 };
 
 // 中间：单个表单组件
-const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
+const FormComponentOld = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [, drop] = useDrop({
