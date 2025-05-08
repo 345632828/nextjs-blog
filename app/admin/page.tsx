@@ -248,7 +248,20 @@ export default function Index() {
         </Card>
 
         {/* 中间可视区 */}
-        <Card title="可视区" style={{ flex: 1 }}>
+        <Card  style={{ flex: 1 }}
+           title={
+          <div className="flex justify-between items-center">
+            <span>可视区</span>
+            <div className="pl-4 space-x-2">
+              <Button type="primary" onClick={saveForm}>
+                保存表单{sTname}
+              </Button>
+              <Button onClick={exportForm}>导出为 JSON</Button>
+            </div>
+          </div>
+        }
+        >
+      
           <DropZone onAdd={addComponent}>
             <Form layout="vertical">
               {formComponents.map((comp, idx) => (
@@ -265,13 +278,15 @@ export default function Index() {
         </Card>
 
         {/* 右侧编辑区 */}
-        <Card title="编辑区" style={{ width: 300 }}>
+        <Card title="编辑区" style={{ width: 300 }} >
           {selectedIndex !== null ? (
+            <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
               <FormEditor
                 formComponents={formComponents}
                 selectedIndex={selectedIndex}
                 updateSelected={updateSelected}
               />
+            </div>
           ) : (
             <p>请双击中间区域组件进行编辑</p>
             
@@ -279,12 +294,7 @@ export default function Index() {
         </Card>
       </div>
 
-      <div style={{ paddingLeft: 20 }}>
-        <Button type="primary" onClick={saveForm} style={{ marginRight: 10 }}>
-          保存表单{sTname}
-        </Button>
-        <Button onClick={exportForm}>导出为 JSON</Button>
-      </div>
+    
     </DndProvider>
   );
 }
