@@ -7,6 +7,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import renderComponents from "@/components/josnToForm";
 import componentsList from './formComponents';
 import FormComponent from './formEdit'
+import useUserStore from "@/app/store/store";
+import FormEditor  from "./formEditCard"; 
 
 const ItemType = 'FORM_COMPONENT';
 // 定义表单项的类型
@@ -183,6 +185,7 @@ export default function Index() {
   const [formComponents, setFormComponents] = useState<any[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [dragKey, setDragKey] = useState(0);
+  const sTname = useUserStore((state) => state.name);
 
   const addComponent = (type: string) => {
     console.log('type',type)
@@ -264,28 +267,21 @@ export default function Index() {
         {/* 右侧编辑区 */}
         <Card title="编辑区" style={{ width: 300 }}>
           {selectedIndex !== null ? (
-            <>
-              <Input
-                placeholder="标签名"
-                style={{ marginBottom: 10 }}
-                value={formComponents[selectedIndex].label}
-                onChange={(e) => updateSelected('label', e.target.value)}
+              <FormEditor
+                formComponents={formComponents}
+                selectedIndex={selectedIndex}
+                updateSelected={updateSelected}
               />
-              <Input
-                placeholder="占位提示"
-                value={formComponents[selectedIndex].placeholder}
-                onChange={(e) => updateSelected('placeholder', e.target.value)}
-              />
-            </>
           ) : (
             <p>请双击中间区域组件进行编辑</p>
+            
           )}
         </Card>
       </div>
 
       <div style={{ paddingLeft: 20 }}>
         <Button type="primary" onClick={saveForm} style={{ marginRight: 10 }}>
-          保存表单
+          保存表单{sTname}
         </Button>
         <Button onClick={exportForm}>导出为 JSON</Button>
       </div>

@@ -5,8 +5,8 @@ import { useDrop, useDrag } from "react-dnd";
 import { Form } from "antd";
 import componentsList from "./formComponents";
 import renderComponents from "@/components/josnToForm";
-//import { ComponentItem, useComponentStore } from "@/store/useComponentStore";
-//import { ComponentItem, useComponentStore } from "@/store/useComponentStore";
+import useUserStore  from "../store/store";
+
 type Option = {
   label: string;
   value: string;
@@ -19,7 +19,9 @@ type ComponentItem = {
   list?: Option[];
   value?: any;
 };
+
 const ItemType = "FORM_COMPONENT";
+
 function updateListItemInPlace(
   components: ComponentItem[],
   targetType: string,
@@ -40,7 +42,7 @@ function updateListItemInPlace(
 // 中间：单个表单组件
 const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
   const ref = useRef<HTMLDivElement>(null);
-
+  const { name, setName } = useUserStore();
   const [, drop] = useDrop({
     accept: ItemType,
     hover: (item: any) => {
@@ -67,6 +69,7 @@ const FormComponent = ({ comp, idx, moveComponent, onDoubleClick }: any) => {
   const onDoubleClickEdit = () => {
     console.log("componentsList", componentsList);
     console.log("idx", idx);
+    setName(idx)
     updateListItemInPlace(componentsList, "radio", "A", { label: "香蕉" });
     onDoubleClick(idx);
   };

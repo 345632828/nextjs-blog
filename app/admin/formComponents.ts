@@ -1,3 +1,5 @@
+"use client";
+
 export default [
   { type: "input", label: "输入框" },
   { type: "select", label: "下拉框" },
