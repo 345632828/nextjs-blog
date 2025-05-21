@@ -35,6 +35,13 @@ const FormEditor: React.FC<FormEditorProps> = ({
     selectedIndex,
     updateSelected,
 }) => {
+
+    const [json, setJson] = useState({
+        type: "input",
+        label: "输入框",
+        placeholder: "请输入内容",
+    });
+    
     if (
         !Array.isArray(formComponents) ||
         selectedIndex < 0 ||
@@ -43,11 +50,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
         return <div style={{ color: "red" }}>请选择一个有效的组件</div>;
     }
 
-    const [json, setJson] = useState({
-        type: "input",
-        label: "输入框",
-        placeholder: "请输入内容",
-    });
+    
 
     const selected = formComponents[selectedIndex];
 
